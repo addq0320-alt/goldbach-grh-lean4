@@ -1,0 +1,373 @@
+\documentclass[11pt,a4paper]{article}
+\usepackage[margin=26mm,top=23mm,bottom=25mm]{geometry}
+\usepackage{fontspec,amsmath,amsthm,unicode-math,booktabs,tabularx,array}
+\setmainfont{Latin Modern Roman}\setmathfont{Latin Modern Math}
+\usepackage[colorlinks=true,linkcolor=black,citecolor=black,urlcolor=blue!45!black]{hyperref}
+\usepackage{xcolor}
+\hypersetup{pdftitle={Quaternionic Spectral Hypotheses for the Binary Goldbach Problem},pdfauthor={Lei},pdfsubject={Balanced operator compressions, separated zero sums, and a three-cut criterion}}
+\newtheorem{theorem}{Theorem}[section]\newtheorem{prop}[theorem]{Proposition}
+\newtheorem{lemma}[theorem]{Lemma}\newtheorem{cor}[theorem]{Corollary}
+\newcommand{\Sg}{\mathfrak S}\newcommand{\mm}{{\mathfrak m}}\newcommand{\MM}{{\mathfrak M}}
+\newcommand{\R}{{\mathbb R}}\newcommand{\C}{{\mathbb C}}\newcommand{\Z}{{\mathbb Z}}
+\newcommand{\F}{{\mathbb F}}\newcommand{\E}{{\mathbb E}}\newcommand{\ind}{\mathbf1}
+\newcommand{\HS}{{\mathrm{HS}}}\newcommand{\sep}{{\mathrm{sep}}}
+\newcommand{\norm}[1]{\left\|#1\right\|}\newcommand{\abs}[1]{\left|#1\right|}
+\newcommand{\dd}{\,\mathrm d}\newcommand{\e}{\mathrm e}
+\setlength{\emergencystretch}{2em}\setcounter{tocdepth}{1}
+\title{\bfseries Quaternionic Spectral Hypotheses for the Binary Goldbach Problem\\[5pt]
+\large Balanced operator compressions, separated zero sums, and a three-cut criterion}
+\author{Lei}\date{22 November 2026}
+\begin{document}
+\maketitle
+\begin{abstract}
+The quaternionic spectral product introduced by Jiamin Li and Jianya Liu converts an eigenvalue bound for a self-adjoint arithmetic operator into a zero-free region. We give the exact thresholds for their strong and weak hypotheses and study the compression of their operator to the interval supporting balanced prime pairs. Assuming the generalized Riemann hypothesis for Dirichlet \(L\)-functions, we bound the singular-series-weighted exceptional set for a fixed relative defect of the compression by \(O_c(X^{1/2}\log^4(2X))\). For a signed sixth moment indexed by separated zeta-zero ordinates we prove a restricted estimate by Mellin sampling and a three-against-three Cauchy--Schwarz inequality. An additive large sieve controls all sufficiently short cutoffs. On the full dyadic interval, a one-sided \(o(X^6)\) estimate at just three specified long cutoffs would give the expected order of magnitude of balanced representations for every even integer. That estimate and the weak spectral bound on the full Hardy space remain open. A Lean 4 companion checks the quaternionic product criterion and finite parts of the analytic reductions.
+\end{abstract}
+\noindent\textit{Keywords.} Binary Goldbach problem, quaternionic spectral product, Dirichlet GRH, exceptional sets, large sieve, formal verification.\\
+\textit{2020 Mathematics Subject Classification.} 11P32, 11M26, 11N35, 47B10.
+{\small
+\makeatletter\renewcommand*\l@section{\@dottedtocline{1}{0em}{1.8em}}\makeatother
+\tableofcontents}
+\clearpage
+\section{Introduction}
+A prime pair \(p+q=N\) is balanced if \(N/3<p,q<2N/3\). Individual exceptions present a difficulty distinct from estimating the average over even integers. A single Fourier coefficient of size comparable to \(X\) contributes order \(X^6\) to an unnormalized sixth moment on \([X,2X]\). This observation accounts for the threshold in our three-cut criterion.
+
+Li and Liu \cite{LL} associate a compact self-adjoint Hilbert--Schmidt operator \(T_N\) to an even integer \(N\), subject to GRH at that modulus. Their original implication for balanced Goldbach representations assumes an additional spectral hypothesis. Section \ref{s:quat} states their norm criteria and distinguishes a reported obstruction to the strong hypothesis from the unresolved norm estimate for the weak hypothesis. Our arithmetic estimates use global Dirichlet GRH, since the auxiliary moduli vary independently of \(N\).
+
+The main conclusions have different scopes. Theorem \ref{t:main} gives a conditional implication for each even integer and a mean-square estimate for the exceptional set. Theorem \ref{t:cells} bounds a particular part of the signed zero expansion at every cutoff. Theorem \ref{t:short} bounds the entire expansion at short cutoffs. A restriction on five height differences in the former theorem must be retained when applying its bound. Section \ref{s:other} relates these results to a different expansion in Dirichlet characters and to finite-field and operator tests.
+
+Classical work on exceptional sets and on zero correlations includes Languasco and Perelli \cite{LP}. Their pair correlation involves differences of ordinates and additional conjectures in certain ranges. The incidence estimate here concerns two ordered groups of six ordinates, with two assigned to each Fourier factor. The square-root power for a Goldbach exceptional set has classical precedents. The quantity estimated here includes a singular-series weight and also detects a large norm of a specified compression.
+
+\section{The quaternionic product and the two hypotheses}\label{s:quat}
+Put \(L_N=\log N\), and write
+\[
+ S_N=2\prod_{p>2}\left(1-\frac1{(p-1)^2}\right)
+          \prod_{\substack{p\mid N\\p>2}}\frac{p-1}{p-2},\qquad
+ d_N^2=S_N L_N^3/N .
+\]
+For the real eigenvalues \(\mu_j\) of \(T_N\), counted with multiplicities, let \(w_j=4\mu_j^2/d_N^2\). Their sum is finite. Li and Liu's intrinsic quaternionic function is
+\[
+ {\cal X}_N(q)=\prod_j\bigl(1-w_j q(1-q)\bigr),\qquad q\in\mathbb H.
+\]
+All factors at \(q\) belong to the same complex slice. These zeros belong to a function of the spectrum of \(T_N\). The zeta-zero ordinates used in Section \ref{s:heights} enter separately through the explicit formula.
+
+\begin{prop}[Li--Liu norm criteria, with boundary cases]\label{p:quat}
+All zeros of \({\cal X}_N\) have real part \(1/2\) precisely when \(\|T_N\|\le d_N\). For \(0<\eta\le1/2\), the open half-space \(\Re q>1-\eta\) is zero-free precisely when \(4\|T_N\|^2\eta(1-\eta)\le d_N^2\).
+\end{prop}
+\begin{proof}
+The product converges normally on compact subsets of each slice. At a point where every factor is nonzero, the tail of its logarithm converges absolutely, so the product is nonzero there. A positive \(w\) gives \(q(1-q)=1/w\). For \(0<w<4\) the solutions form the quaternionic sphere \(\Re q=1/2\), \(|\Im q|^2=1/w-1/4\). At \(w=4\) it reduces to \(1/2\). At \(w>4\) the two roots are real, the larger being \((1+\sqrt{1-4/w})/2\). Thus \(w\le4\) characterizes the critical line condition, and \(w\eta(1-\eta)\le1\) characterizes exclusion from the open half-space. A zero weight contributes the constant factor one. Take the supremum over the eigenvalues, using self-adjointness and compactness.
+\end{proof}
+
+In the notation of \cite[eqs.~(1.7), (2.28), (2.30)]{LL}, Hypothesis R requires the first conclusion for all sufficiently large admissible even integers. Hypothesis S uses a prescribed admissible \(h(N)\to\infty\), with \(\eta_N=h(N)^2L_N^3/(NS_N)\le1/4\) eventually. In particular one may take \(h(N)=\log\log N\) for large \(N\). The exact weak threshold is
+\[
+ \|T_N\|\le \frac{S_N}{2h(N)\sqrt{1-\eta_N}} .
+\]
+The stronger bound \(S_N/(2h(N))\) suffices. The factor \(\sqrt{1-\eta_N}\) matters for an exact equivalence. The quadratic form identity of \cite{LL} then yields a normalized weighted count \(c_\phi S_N+O_\phi(S_N/h(N))\), for the fixed test weight in that paper.
+
+Yilin Liu's preprint \cite[Thm.~1.1]{YL} reports that, for fixed \(D>0\) and \(0<\epsilon<1\), at least \(X\exp(-(\log X)^\epsilon)\) even integers in each sufficiently large dyadic interval have \(\sqrt N\|T_N\|>(\log N)^D\) under GRH at those moduli. Taking \(D=2\) and using \(S_N\ll\log\log N\) contradicts R if that theorem holds. Its proof tests opposite short shifts with different Buchstab densities. The repository labels the preprint primarily AI-generated. We cite its lower bound as an external claim. The formal companion checks its implication for R and a Buchstab-function lemma. The same lower bound does not decide S: for example the rank-one model \(S=1,\ \mu_1=1/\log N\) exceeds every fixed logarithmic power after multiplication by \(\sqrt N\), yet satisfies the weak threshold for \(h=\log\log N\) eventually. This last spectrum is an abstract example.
+
+\section{The balanced compression}\label{s:op}
+Write \(I=(a,b)=(1/3,2/3)\) and \(\lambda=b-a\). On the Hardy strip with boundaries \(\alpha_N=1/\log N,\ \beta=1/8\), write \(T_N=P_N-D_N^{\rm diag}-K_N\) for the odd-character, diagonal and beta-model operators of \cite[Secs.~5--7]{LL}. Compress to the closed span of the Mellin tests \(v_f\), \(f\in C_c^\infty(I)\), by \(B_N=\Pi_I T_N|_{\operatorname{ran}\Pi_I}\). Let
+\[
+ \nu_N=N^{-1}\!\sum_{\substack{m/N\in I\\(m,N)=1}}\!
+ \Lambda(m)\Lambda(N-m)\,\delta_{m/N},\qquad \rho_N=S_N\,du-\nu_N .
+\]
+With the test convention linear in \(f\), the mixed entries are
+\(\langle B_Nv_g,v_f\rangle=\int_I f(u)\overline{g(1-u)}\,d\rho_N(u)\).
+Indeed the equal-residue odd-character term cancels the diagonal, and the opposite residue term gives \(m+n=N\) on these supports. The positive integral model has only the shift-one reflection on \(I\). The test norm from \cite[Prop.~7.4]{LL} is equivalent uniformly to \(\|f'\|_2\): its square is the integral of \(|f/2-uf'|^2\) times \((Nu)^{2\alpha_N}/[2\pi(1+(Nu)^{-2(\beta-\alpha_N)})]\). These identities fix the Hilbert space normalization.
+
+Set \(P_N^*(x)=\rho_N((a,x])\). Integration by parts and one-dimensional Sobolev embedding yield
+\begin{equation}
+ \|B_N\|\ll\inf_{c\in\R}\|P_N^*-c\|_{L^2(I)} .
+ \label{eq:cdf}
+\end{equation}
+Conversely on fixed \(J\Subset I\), take \(g=1\) on \(1-J\) and take \(f\) to be a primitive of \(P_N^*-(P_N^*)_J\) on \(J\), zero outside. This gives \(\|P_N^*-(P_N^*)_J\|_{L^2(J)}\ll_J\|B_N\|\). If \(N\) has no balanced prime pair, the prime powers contribute \(O(N^{-1/2}\log^3 N)\) to \(\nu_N(I)\), so this lower bound detects a fixed fraction of \(S_N\).
+
+For completeness, \(s_j(B_N)\ll S_N/j^2\). The positive measure \(S_Ndu+\nu_N\) is reflection invariant and has mass \(O(S_N)\) by the two-prime upper sieve below. Insert the equal-length and equal-mass \(k\)-division points in \(I\). Tests vanishing on the at most \(2(k-1)\) interior nodes satisfy \(\int |f|^2\,d(S_Ndu+\nu_N)\ll S_N k^{-2}\|f'\|_2^2\), by the length times mass bound on each open subinterval. Node atoms vanish on these tests. Compressing the form on both sides to this subspace changes rank by at most \(4(k-1)\), which proves the assertion. Thus control of the tail still permits a large first singular value. More generally \(\|B_N\|/S_N\to0\) is equivalent along a sequence to \(\nu_N/S_N\rightharpoonup du\) against compactly supported smooth tests on \(I\). The converse uses uniform total variation and uniform compactness of the test products in \(C_0(I)\).
+
+\paragraph{Two full-space approximations.} Write \(P_{\le U},D_{\le U}^{\rm diag}\) for the arithmetic truncations and keep the beta operator. For \(U=N^{8\log\log N}\) the Hilbert--Schmidt error is \(O((\log N)^{-2})\). The right-to-right block on the ambient double-boundary space, with the operator extended by zero off the Hardy space, is \(O_{\HS}(N^{-1/8}\log^2 N)\). To see the distinct scales, partial summation of \(\sum_{m\le t}\Lambda(m)\chi(m)\ll\sqrt t\log^2(2Nt)\) and Plancherel in \(\log t\) bound the character-vector tail on a line of real part \(\sigma\) by
+\[
+ U^{-\sigma}\sigma^{-1/2}(\log N+\log(2U)+\sigma^{-1})^2 .
+\]
+Apply the rank-one perturbation bound \((2\|v\|+\|\Delta v\|)\|\Delta v\|\) before averaging. On the right line use \(U=N/3\), where the truncated odd-character covariance equals its diagonal; its mean squared vector norm is bounded. The residual beta kernel is bounded by a constant times \(S_N N^{-2\beta}(2+|t-y|)^{2\beta}/\sqrt{(1+t^2)(1+y^2)}\), which is square integrable since \(4\beta<1\). The full-space weak threshold still requires the left boundary and mixed directions.
+
+One can express the missing full-space bound as a finite test with a common constant. If the vectors \(u_i\) have dense finite span and \(v(a)=\sum_i a_i u_i\), then, for \(b_*\ge0\),
+\[
+ \|T_N\|\le b_* \quad\Longleftrightarrow\quad
+ \left|\sum_{i,j}\overline{a_i}b_j\langle u_i,T_Nu_j\rangle\right|
+      \le b_*\,\|v(a)\|\,\|v(b)\|
+ \quad\text{for all finitely supported }a,b.
+\]
+Here the inner product is linear in its second variable. Extend the finite bound in each variable by density and use the characterization of the Hilbert norm by unit test vectors. Taking \(b_*=S_N/(2h(N))\) suffices for the weak zero-free region. This is the test implemented in \texttt{GoldbachSpectral.KernelTest}.
+
+\section{Sixth moments and their exact dual}
+On \(H^1_0(I)\) with derivative norm let \(A_\sigma\) represent the form \(\int f\bar g\,d\sigma\). Put \(\sigma_N=\rho_N/S_N\), \(E_N=\|A_{\sigma_N}\|_{\HS}^2\), and \({\cal M}_X=\sum_{N\in{\cal D}_X}E_N^3\), where \({\cal D}_X=[X,2X]\cap2\Z\). Reflection preserves the derivative norm, so \(\|B_N\|/S_N\ll E_N^{1/2}\).
+Let \(G(u,v)=(\min(u,v)-a)(b-\max(u,v))/\lambda\), \(g_0(u)=G(u,u)\), and \(r(u)=\log((u-a)/(b-u))\). Then
+\begin{align}
+ G(u,v)^2&=g_0(u)g_0(v)e^{-|r(u)-r(v)|},\nonumber\\
+ E_N&=\int_\R |F_N(\xi)|^2\,\frac{d\xi}{\pi(1+\xi^2)},&
+ F_N(\xi)&=\int_I g_0(u)e^{-i\xi r(u)}\,d\sigma_N(u).
+ \label{eq:green}
+\end{align}
+Indeed the squared Hilbert--Schmidt kernel is \(G^2\) and the displayed Cauchy density has characteristic function \(e^{-|t|}\). In physical coordinates let \(e_N(x)=3(\lambda x)^{-3}\int_{(a,a+\lambda x]}(v-a)^2d\sigma_N(v)\). An alternative exact formula is
+\[
+ E_N=\frac{\lambda^4}{90}\int_0^1|e_N(x)|^2\,20x^3(1-x)\,dx .
+\]
+For \(u=a+s,v=a+t\) factor \(G^2=(st/\lambda)^2\min(H(s),H(t))\), where \(H(s)=(\lambda-s)^2/s^2\). Integrating \(-H'\) from \(\max(s,t)\) to \(\lambda\) proves the formula, including atoms. Both the physical weight and the spectral weight are thus determined by the original energy. If \(d\pi=d\xi/[\pi(1+\xi^2)]\), Hilbert space duality gives
+\[
+ {\cal M}_X^{1/6}=\sup_{\sum_N\|h_N\|_{L^2(\pi)}^{6/5}\le1}
+ \left|\sum_N\int F_N\overline{h_N}\,d\pi\right|.
+\]
+The extremizer for positive \({\cal M}_X\) is \(h_N={\cal M}_X^{-5/6}E_N^2F_N\).
+
+For the signed sixfold formulation put \(L=\log(2X)\), \(T=X^{1/4}L^{-2}\), \(P=8L\), \(k_0=\lceil PT\rceil\), \(\delta=T^{-2}\). Truncate the periodic kernel in \eqref{eq:green} to \(|k|\le k_0\) with coefficients \(2/[P(1+(2\pi k/P)^2)]\). Cube its double integral for each \(N\) and restrict to all six \(u_i\) satisfying \(\min(|u_i-u_j|,|u_i+u_j-1|)>\delta\) for \(i\ne j\). More explicitly, with \(\mathcal F_\delta\) denoting this subset of \(I^6\), put
+\[
+ K_T(u,v)=g_0(u)g_0(v)\sum_{|k|\le k_0}
+  \frac{2 e^{2\pi i k(r(u)-r(v))/P}}{P(1+(2\pi k/P)^2)},\qquad
+ R_X=\sum_{N\in\mathcal D_X}\int_{\mathcal F_\delta}
+    \prod_{j=1}^3 K_T(u_{2j-1},u_{2j})\,d\sigma_N^{\otimes6}.
+\] The reduction is
+\[
+ {\cal M}_X\ll (R_X)_++X^{-1/2}L^{12},\qquad
+ |R_X|\ll {\cal M}_X+X^{-1/2}L^{12}.
+\]
+Here the mass of \(|\sigma_N|\) on length \(\delta\) is \(O(\delta)\) by the interval upper sieve. Indeed the two forbidden residues proof in Section \ref{s:sieve} works on a balanced physical interval of length \(H\asymp N\delta\) with \(z=\sqrt H\) and \(\log H\asymp L\). Proper prime powers contribute \(O(L/\sqrt X)\) after normalization since \(\sum_{p^k\le2X,\,k\ge2}\log p\ll\sqrt X\). The \(g_0\)-weighted measure in the \(r\) coordinate has mass \(O(1/T)\) in length \(1/T\). Periodization has error \(O(X^{-4})\) after cutting its exponentially decreasing continuous tails. A dyadic Fej\'er majorant gives spectral tail \(O(T^{-2})\) in \(E_N\). In the cube, inclusion--exclusion over forbidden pairs bounds the deleted contribution by \(\epsilon\) times the complete truncated moment plus \(O_\epsilon(X\delta^3)\); each touched integration costs \(O(\sqrt\delta)\) in the tensor contraction. The resulting remainder is \(O(XT^{-6})\). The companion derivation \texttt{06-duality.md} gives the forest contraction with its endpoint estimates. Thus \(R_X\ll X^{-1/2}L^{12}\) would give \(\max_{N\in{\cal D}_X}\|B_N\|/S_N\ll X^{-1/12}L^2\).
+
+\section{The arithmetic and zero-sum windows}\label{s:windows}
+Write \(e(t)=\exp(2\pi it)\), and take \(\widehat H(n)=\int_{-1/2}^{1/2}H(\alpha)e(-n\alpha)d\alpha\). Fix \(0\le\eta\le1\) in \(C_c^\infty((1/8,2))\), equal to one on \([1/3,4/3]\), with \(|\widehat\eta(v)|\ll\exp(-c\sqrt{|v|})\). Such cutoffs are obtained by smoothing an interval with the convolution of uniforms of widths proportional to \(j^{-2}\). Use a fixed nonnegative smooth \(W\le1\), supported in a compact subinterval of \((0,3)\), one on \([1,2]\), with the same Fourier decay. Define \(g(t)=\eta(t/X)\), \(P_w(\alpha)=\sum_{m\ge1}\Lambda(m)w(m)e(m\alpha)\), and \(P_y\) by \(w=\ind_{[1,y]}\).
+Remove arcs of half-width \(L^4/X\) about all reduced \(a/q\), \(q\le Q=\lfloor X^{3/10}\rfloor\), and write \(\mm=\mathbb T\setminus\MM\) for the complement. Set
+\[
+ C_y^\sharp(n)=\widehat{\ind_\mm P_y P_g}(n),\qquad
+ \|b\|_{6,W}^6=\sum_{2\mid n}W(n/X)|b(n)|^6,\qquad B_X=X^{11/2}L^{12}.
+\]
+In sums over \(2\mid n\), \(n\) ranges over the integers. Define the major-arc error \(A_y(n)=\widehat{\ind_\MM P_yP_g}(n)-S_n\int_0^y g(n-t)dt\) at even positive \(n\).
+
+Smooth the endpoint by \(f_y(t)=w_0(t)\int_0^1\rho(v)\ind_{t\le y-X^{4/5}v}\,dv\), with a fixed smooth probability density on \((0,1)\). Take \(w_0\) smooth, zero up to a point strictly above one and equal to one from a point strictly below two onwards. Use \(T_0=X^{4/5}/L^2\), \(E=\mm\cap\{X|\alpha|>T_0\}\). With the two signs of the distinct nontrivial zeta-zero ordinates and multiplicities \(m_\gamma\), put
+\[
+ F_w(\gamma,\alpha)=\int_0^\infty w(t)t^{-1/2+i\gamma}e(\alpha t)dt,\qquad
+ Z_w=-\sum_\gamma m_\gamma F_w(\gamma,\cdot),\qquad
+ C_y=\widehat{\ind_E Z_{f_y}Z_g}.
+\]
+In the expansion of \(M(y)=\|C_y\|_{6,W}^6\), each of the six slots has two ordinates. Put \(b_h(\gamma)=\lfloor\gamma/h\rfloor\). Retain a term precisely when any two ordinates belonging to \emph{different slots} have bin indices differing by at least two. Write the signed sum as \(D_h(y)\) and \(D_{\sep}(y)=D_L(y)\). The two ordinates of one slot can occupy the same bin. Interchanging the two sides shows that \(D_h\) is real. Smoothness permits a cutoff \(|\gamma|\le X^2\) with arbitrarily small power error: repeated integration by parts in \(\log t\) bounds the tail by summing \(O_k(\sqrt X(1+X)^k|\gamma|^{-k})\) against the local zero count. This holds for restricted subsums as the other legs have polynomial absolute mass.
+
+For the following uniform estimates, the major arcs and the transfer to the zero sums are treated in Appendix \ref{a:transfer} and Section \ref{s:heights}.
+\begin{align}
+ \sum_n|C_y^\sharp(n)|^2&\ll X^{5/2}L^4,&
+ \|A_y\|_{6,W}^6&\ll_\epsilon X^{26/5+\epsilon},\label{eq:major}\\
+ \|C_y^\sharp-C_y\|_{6,W}&\ll B_X^{1/6},&
+ |M(y)-D_{\sep}(y)|&\ll B_X .\label{eq:transfer}
+\end{align}
+All constants are uniform for \(0\le y\le2X\).
+
+\section{Three cutoffs for balanced primes}\label{s:main}
+For a real number \(t\) put \(t_+=\max(t,0)\). The three points in the next statement are common to all even integers in a dyadic interval. Their location avoids the endpoints at which a balanced representation ceases to be strict.
+\begin{theorem}\label{t:main}
+Assume Dirichlet GRH. Put \(\mathcal Y_X=\{X/2,\,2X/3,\,5X/6\}\) and \(M_3^+=\max_{y\in\mathcal Y_X}(D_{\sep}(y))_+\).
+If \(M_3^+=o(X^6)\) as \(X\to\infty\), then, uniformly for even \(N\in[X,2X]\),
+\[
+ \#\{(p,q):p+q=N,\ p,q\text{ prime},\ p,q\in NI\}\gg XS_N/L^2 .
+\]
+For the set \(\mathcal E_X\) of even integers in the window with no balanced representation, one has
+\[
+ \sum_{N\in\mathcal E_X}S_N^2\ll X^{1/2}L^4,\qquad
+ \sum_{N\in\mathcal E_X}S_N^6\ll X^{-6}(B_X+M_3^+).
+\]
+\end{theorem}
+\begin{proof}
+For \(N\le3X/2\) take \(J=(X/2,2X/3]\). For \(N>3X/2\) take \(J=(2X/3,5X/6]\). Both have length \(X/6\). Apart from a possible endpoint, \(m,N-m\in NI\) for \(m\in J\), and \(g(N-t)=1\) throughout \(J\). Write \(J=(u,v]\), and define \(R_J(N)=\sum_{m\in J}\Lambda(m)\Lambda(N-m)g(N-m)\), extending \(\Lambda\) by zero outside the positive integers. Fourier inversion gives the identity
+\begin{equation}
+ R_J(N)-S_N X/6=C_v^\sharp(N)-C_u^\sharp(N)+A_v(N)-A_u(N).
+ \label{eq:cut}
+\end{equation}
+Since \(W=1\) on the window, \eqref{eq:major} bounds each major-arc error by \(O_\epsilon(X^{13/15+\epsilon})\). By \eqref{eq:transfer}, the minor-arc error at each of the three endpoints is \(O((B_X+M_3^+)^{1/6})\). Under the extra little-oh hypothesis the total error is \(o(X)\), whereas \(S_N\gg1\). Proper prime powers and a possible endpoint contribute \(O(\sqrt X L^3)\). Each remaining pair has weight at most \(L^2\). If there are no such pairs, \eqref{eq:cut} forces \(|C_y^\sharp(N)|\gg XS_N\) at one of the three cuts. Summing the square, or the sixth power, using the three separate window estimates proves the two claims.
+\end{proof}
+
+\begin{cor}[A fixed relative operator defect]\label{c:op}
+For every fixed \(c>0\), under Dirichlet GRH,
+\[
+ \sum_{\substack{N\in\mathcal D_X\\\|B_N\|\ge cS_N}}S_N^2\ll_c X^{1/2}L^4 .
+\]
+For an integer \(8\le K\le X^{1/5}\), set \(M_K^+=\max_{0\le j\le2K}(D_{\sep}(jX/K))_+\). Then
+\[
+ \max_{N\in\mathcal D_X}\frac{\|B_N\|}{S_N}
+ \ll K^{-1}+X^{-1}(B_X+M_K^+)^{1/6}.
+\]
+\end{cor}
+\begin{proof}
+The sieve estimate in Section \ref{s:sieve} bounds the mass of \(\nu_N\) on any physical interval of length at most \(X/K\) by \(O(S_N/K)\), including prime powers. The same holds for the continuous model after scaling by \(N\). Thus the oscillation of \(P_N^*\) in a mesh cell is \(O(S_N/K)\). Fix an anchor mesh point inside \(NI\). Between it and any other mesh point in \(NI\), the signed mass is given by minus the difference of the minor- and major-arc errors divided by \(N\), as in \eqref{eq:cut}. Restoring the coprimality condition costs \(O(L^3/N)\), by summing over \(m=p^k\) with \(p\mid N\). Every point of \(NI\) lies within one step of an interior mesh point. Subtract the anchored constant in \eqref{eq:cdf}, use \(S_N\gg1\), and apply \eqref{eq:transfer}. For the exceptional set, fix \(K\) sufficiently large in terms of \(c\). A norm at least \(cS_N\) then forces \(|C_{jX/K}^\sharp(N)|\gg_c XS_N\) for some \(j\). Summing \eqref{eq:major} at these \(O_c(1)\) points proves the claim.
+\end{proof}
+The corollary allows individual defects. To eliminate fixed relative defects it suffices to take \(K\to\infty\) slowly with \(M_K^+=o(X^6)\). The three-cut assumption alone controls the particular prime-pair count used in Theorem \ref{t:main}. The distinction is the freedom to choose the test function in an operator norm.
+
+\section{An additive large sieve for short intervals}\label{s:sieve}
+Put \(\ell=1+\log L\) and \(Y_*=X^{4/5}L^{8/5}\ell^{-4/5}\).
+\begin{theorem}\label{t:short}
+Under Dirichlet GRH one has
+\[
+ |D_{\sep}(y)|\ll B_X+X^{3/2}y^5L^4\ell^4\qquad(0\le y\le2X).
+\]
+In particular the entire separated sum is \(O(B_X)\) up to \(Y_*\).
+On \([0,2X]\) the uniform one-sided \(O(B_X)\) bound is equivalent to its restriction to \(\{jY_*:0\le jY_*\le2X\}\cup\{2X\}\), where \(j\) is an integer.
+\end{theorem}
+\begin{proof}
+Let \(J=(u,v]\subset[0,2X]\) have length at most \(Y\), with \(X^{4/5}\le Y\le2X\), and put \(z=\sqrt Y\). For each prime \(p\le z\), sieve the residues \(0,n\bmod p\) simultaneously. Their number \(\nu_p\) is one for \(p\mid n\) and two otherwise. Because \(n\) is even, \(\nu_p<p\). If \(\mathcal S\) is the set of surviving integers in \(J\), the additive large sieve \cite{MV} gives
+\[
+ |\mathcal S|\le\frac{Y+O(1)+z^2}{G(z)},\qquad
+ G(z)=\sum_{d\le z}\mu^2(d)\prod_{p\mid d}\frac{\nu_p}{p-\nu_p}.
+\]
+Indeed \(c_p=1-(p/\nu_p)\ind_{\{0,n\}\bmod p}\) has mean zero, mean square \((p-\nu_p)/\nu_p\) and value one on survivors. The product of these tests over the primes dividing a squarefree \(d\) contains only primitive additive frequencies modulo \(d\). Cauchy--Schwarz and finite Parseval lower-bound the sum of squared Fourier coefficients of \(\ind_{\mathcal S}\) over those frequencies by \(|\mathcal S|^2\prod_{p\mid d}\nu_p/(p-\nu_p)\). Fractions up to denominator \(z\) are \(z^{-2}\)-spaced, giving the asserted sieve bound.
+
+Normalize the product over \(p\le z^\theta\) of \(1+\nu_p/(p-\nu_p)\) to a probability distribution on squarefree products \(d\). Its expectation of \(\log d\) is \(\sum\nu_p\log p/p\ll\theta\log z\). Fix \(\theta>0\) small enough that at least half the mass lies at \(d\le z\). Comparison prime by prime with Mertens' product gives \(G(z)\gg(\log z)^2/S_n\). Also \(1\ll S_n\ll n/\varphi(n)\ll\ell\) on the support of \(W\). Thus the weighted contribution of pairs of primes exceeding \(z\) is \(O(YS_n)\). A smaller prime or a proper prime power contributes in total \(O((z+\sqrt X L)L^2)\ll Y\). In particular \(R_J(n)\ll Y S_n\), including the real weight \(g\).
+
+For \(c_J=C_v^\sharp-C_u^\sharp\) and \(a_J=A_v-A_u\) full-circle inversion now gives \(|c_J|\ll Y\ell+|a_J|\). The prime number theorem under RH on the interval gives \(\sum_{m\in J}\Lambda(m)\ll Y+\sqrt XL^2\ll Y\). Parseval and the minor-arc bound for \(P_g\) in Appendix \ref{a:transfer} give \(\sum_n|c_J(n)|^2\ll X^{3/2}YL^4\). On \(|c_J|\le CY\ell\) use the fourth power of this threshold times the square sum. On the complementary set choose \(C\) large enough that \(|c_J|\ll|a_J|\). Consequently
+\begin{equation}
+ \|c_J\|_{6,W}^6\ll_\epsilon X^{3/2}Y^5L^4\ell^4+X^{26/5+\epsilon}.
+ \label{eq:interval}
+\end{equation}
+This step uses only \eqref{eq:major}; in particular it can be used to justify endpoint smoothing in the proof of \eqref{eq:transfer}. The first term equals \(B_X\) at \(Y=Y_*\). Apply \eqref{eq:interval} to the initial interval and use \eqref{eq:transfer}. For the mesh assertion compare any cutoff with the mesh point immediately to its left. The sixth norm pays for a single increment, independently of the number of cells.
+\end{proof}
+
+\section{A large sieve in the zero ordinates}\label{s:heights}
+We now hold the output integer fixed. This retains the oscillation inside a single pair of zero ordinates before any absolute values are taken. Let \(A_{\gamma\tau}(n)\) be the contribution of a prescribed pair to \(C_y(n)\), including both multiplicities. With \(V_0(v)=\int_E e(-\alpha v)d\alpha\), the coefficient divided by \(m_\gamma m_\tau\) is
+\[
+ \iint f_y(t)g(s)t^{-1/2+i\gamma}s^{-1/2+i\tau}V_0(n-t-s)\,dt\,ds .
+\]
+Put \(Y=\max(1,y)\), \(\lambda_0=L/\lceil12L\rceil\), \(J_b=[b\lambda_0,(b+1)\lambda_0)\), and \(P_{bc}=\sum_{\gamma\in J_b,\,\tau\in J_c}|A_{\gamma\tau}(n)|\).
+\begin{theorem}\label{t:cells}
+Uniformly in \(n,y\) one has \(\sum_{b,c}P_{bc}^2\ll YL^4\). Pair the six ordinates on each side of the sixth moment by any fixed bijection. Restrict five of the six differences to prescribed intervals of lengths \(R_1,\ldots,R_5\), and their total to an interval of length \(2A\). The sum of the absolute contributions in \(D_{\sep}(y)\) from this region is
+\[
+ \ll XY^3 L^{12}(1+A)\prod_{i=1}^5(1+R_i).
+\]
+In particular \(R_i\le X^{3/10}\) and \(A=1\) give \(O(B_X)\) at every cutoff.
+\end{theorem}
+\begin{proof}
+For \(|\gamma|\le X^2\) the number of zeros in any unit interval, with multiplicity, is \(O(L)\) by the Riemann--von Mangoldt formula \cite{Ch}. If \(H(\xi)=\int h(u)e^{i\xi u}du\) and \(h\) is supported on a length-\(a\) interval, then
+\[
+ \sum_\gamma m_\gamma|H(\gamma)|^2\ll L(1+a)\|h\|_2^2 .
+\]
+Translate the support to have midpoint zero, and bound the supremum of \(|H|^2\) on each unit interval by its integral plus \(2\int|HH'|\). Plancherel proves the estimate. Split the \(t\)-integration into \(S\le t<4S\), \(S=1,4,\ldots\). The two logarithmic supports on each block have bounded lengths. The input square norm in logarithmic coordinates is
+\(\iint|f_y(t)g(s)V_0(n-t-s)|^2dt\,ds\ll S\), since \(\|V_0\|_2^2=|E|\le1\). Apply the sampling estimate in both variables. Cauchy--Schwarz within each cell pair costs a further \(O(L^2)\) in the squared estimate. Minkowski over the blocks gives \(\sum_{bc}P_{bc}^2\ll(\sum_{S\le Y}\sqrt S)^2L^4\).
+
+For a group of six bins define \(U(\mathbf i)=\prod_{r=1}^3P_{i_{2r-1},i_{2r}}\). Its squared norm is at most \(O(Y^3L^{12})\). A zero-one incidence matrix for the two groups with row and column sums at most \(\Delta\) has \(\sum K_{\mathbf i\mathbf j}U(\mathbf i)U(\mathbf j)\le\Delta\sum U^2\), by \(2uv\le u^2+v^2\). Given the bins on one side, five bins on the other have \(O(\prod(1+R_i))\) choices. Once those are fixed, the total fixes the sixth to \(O(1+A)\) choices. The same count works with the sides reversed. Sum over \(O(X)\) output integers. The original separation restriction can only shrink this absolute sum.
+\end{proof}
+
+A bound using only the total difference faces a large incidence matrix. Take \(H=X^{9/10}\) and six mutually separated length-\(\asymp H\) intervals in \([H,2H]\). Each contains \(\gg H\) occupied bins, by zero counting. At least one layer of constant total bin index has \(\gg H^5\) six-tuples. For each tuple, at most \(O(LH^4)\) members have a corresponding coordinate within \(3L\). The others satisfy separation across the two sides and total height difference at most \(6\lambda_0\). The indicator of this layer has Rayleigh quotient \(\gg H^5\) for the unweighted incidence problem. This calculation leaves room for cancellation from the actual \(A_{\gamma\tau}(n)\).
+
+\paragraph{Recovering the separated sum.}
+Let \(d_h(n)\) denote the signed separated sum for one output. For \(h\ge1\), put \(U_h=\sqrt X\,hL^2\). The following estimate also tracks the negative part:
+\begin{equation}
+ |d_h(n)-|C_y(n)|^6|\ll\sum_{s=2}^6 U_h^s|C_y(n)|^{6-s}.
+ \label{eq:delete}
+\end{equation}
+Indeed two constrained bin labels in a slot give an array of norm \(O(U_h)\) by the preceding sampling proof with cell multiplicity \(O(hL)\). For one constrained label, sum the free leg to \(Z_w\) first. Its restricted inverse transform has \(L^2\) norm \(O(\sqrt{XL})\); sampling the remaining leg over log-support of length \(O(L)\) then gives array norm \(O(\sqrt{Xh}L^2)\). In inclusion--exclusion over cross-slot equalities with bin displacement \(0,\pm1\), express every connected component of constrained labels by one free index and fixed shifts. Each such index occurs at two or more distinct slots. Sum over it by Cauchy--Schwarz at two occurrences and the supremum bound by the square norm at the others. Repeated occurrences in one slot restrict its array to a diagonal. Iteration gives \eqref{eq:delete}, with the untouched slots still summed with their signs. At \(h=L\), \(\|C_y\|_\infty\ll XL\) and \(\sum|C_y|^2\ll X^{5/2}L^4\) follow from the zero-polynomial bounds in Appendix \ref{a:transfer}. In the \(s=2\) term these estimates give \(O(B_X)\); the terms \(s=3,\ldots,6\) use the same estimates or Hölder on \(O(X)\) outputs. This proves the second part of \eqref{eq:transfer}. Also \(d_L(n)\ge0\) when \(|C_y(n)|\) exceeds a sufficiently large multiple of \(U_L\), and hence \(\sum W(d_L)_-\ll X^4L^{18}\) over the even outputs.
+
+More generally, summing \eqref{eq:delete} gives \(|D_h-M|\ll\sum_{s=2}^6 (XU_h^6)^{s/6}M^{1-s/6}\). For \(h=L\lfloor X^{1/4}/L\rfloor\) one has \(XU_h^6\ll B_X\). Absorption when \(M/B_X\) is large shows that the one-sided bounds for \(D_h\) and \(D_{\sep}\) are equivalent. A point mass in the dual output space explains why Cauchy--Schwarz applied to the entire first leg is too costly. The squared Gram diagonal for the multiplier \(G=\ind_E Z_g\) is \(\|G\|_2^2\asymp XL\) (see supplementary derivation 07, minor-arc mass). The target for a generic input of norm \(O(\sqrt{XL})\) would require that diagonal to be \(O(X^{5/6}L^3)\). The arithmetic structure of both legs matters at a single output.
+
+\section{What the other representations control}\label{s:other}
+\paragraph{The circle integral and the operator target.}
+Put \(H_y=\ind_{\mm}P_yP_g\), \(\epsilon=(1,1,1,-1,-1,-1)\), \(\Delta=\sum\epsilon_i\alpha_i\), and \(D_W(v)=\sum_{2\mid n}W(n/X)e(-nv)\). The full six-frequency integral of \(\prod_{i\le3}H_y(\alpha_i)\prod_{i>3}\overline{H_y(\alpha_i)}D_W(\Delta)\) is exactly \(\|C_y^\sharp\|_{6,W}^6\). Poisson summation gives \(D_W(v)=(X/2)\sum_{k\in\Z}\widehat W(X(v-k/2))\). Its \(L^1\) norm is bounded, and only distances \(\le L^4/X\) from a half-integer matter up to a rapidly decreasing error. Join distinct positions \(i,j\) if \(\alpha_i\pm\alpha_j\) lies within \(b_0/X\) of \(0\) or \(1/2\bmod1\), for fixed \(b_0>0\). Define \(\mathcal J_y\) by restricting the integral to this half-integer neighborhood with at most one distinct edge.
+
+The minor-arc estimates give \(\|H_y\|_1\ll XL,\ \|H_y\|_2^2\ll X^{5/2}L^4,\ \|H_y\|_\infty\ll X^{3/2}L^3\). For the last estimate multiply the local error bound in Appendix \ref{a:transfer} by the sharp model \(O(X/(\varphi(q)(1+X|\beta|)))\) before maximizing. Two disjoint edges cost \(O(X^{-2}\|H_y\|_2^6)\) by integrating over their displacements and retaining the \(L^1\) norm of \(D_W\) on the last pair. Two edges meeting at a vertex cost \(O(X^{-2}\|H_y\|_\infty\|H_y\|_1\|H_y\|_2^4)\). Thus
+\[
+ \big|\|C_y^\sharp\|_{6,W}^6-\Re\mathcal J_y\big|\ll B_X .
+\]
+On \(H_0^1(I)\), taking derivatives compresses the kernel \(\rho(I)-\rho((a,\max(s,t)])\) to zero-mean functions. Hence \(\|A_\rho\|_{\HS}^6\ll\int_I|\rho((a,u])-c|^6du\) for any \(c\). For \(\sigma_N\) the cumulative error between prefixes equals, up to a constant, \(-(A_{Nu}(N)+C_{Nu}^\sharp(N))/(NS_N)\) plus the \(O(L^3/N)\) coprimality correction. The substitution \(y=Nu\) and \(S_N\gg1\) give
+\[
+ {\cal M}_X\ll_\epsilon X^{-4/5+\epsilon}
+     +X^{-7}\int_0^{2X}\sum_{N\in{\cal D}_X}|C_y^\sharp(N)|^6dy.
+\]
+In particular \(\sup_y\Re\mathcal J_y\ll B_X\) would give the required \(R_X\ll X^{-1/2}L^{12}\). Equations \eqref{eq:transfer} give an equivalent uniform bound in terms of \(D_{\sep}\). At \(y\asymp X\), Theorem \ref{t:short} still leaves a whole power of \(X\) compared with \(B_X\), apart from logarithms.
+
+\paragraph{Average operators and short windows.}
+Supplementary derivations 03--05 follow the Hilbert--Schmidt norm through progressively finer circle estimates. An initial \(O_\epsilon(X^{2/3+\epsilon})\) exceptional count is sharpened by keeping the same-denominator numerator square sum and integrating the cumulative error before summing in \(N\). The resulting Farey estimate is \(\sum_{N\in\mathcal D_X}\|B_N\|_{\HS}^2\ll\sqrt X L^4\). It also gives at most \(O_A(\sqrt X L^{4+2A})\) exceptions at relative threshold \(L^{-A}\). A triangular weight \(w_h(j)=(h-|j|)_+/h^2\) gives a different test. Upon pulling the operators back to \(H_0^1(I)\), the norm of their signed average about \(M\) is \(O(\log^2(2M)/h)\) for integer \(1\le h\le\sqrt M\). The triangular kernel is a squared Dirichlet kernel divided by \(h^2\); its positivity controls the average of the cumulative distribution. Together with the upper sieve this yields at least \(c_Jh\) even integers with \(\gg_J n S_n/\log^2n\) representations with \(p/n\in J\), for a fixed nonempty open \(J\Subset I\) and \(C_J\log^2(2M)\le h\le\sqrt M\). The alternating sequence \((-1)^{n/2}A\) on even integers illustrates why an individual norm cannot be read off from the signed average.
+
+\paragraph{Kloosterman phases and matched Dirichlet zeros.}
+In a Type I block with \((d,q)=1\), Poisson summation over a smooth factor \(m\) of \(dm\) produces \(h\equiv-ad\bmod q\) on the arc \(a/q+\beta\). Write \(b(r)\) for the resulting \(d\)-weight collected modulo \(q\), zero on nonunits. With the unnormalized finite transform,
+\[
+ \sum_r^*b(r)e(t\bar r/q)=q^{-1}\sum_{k\bmod q}\widehat b(k) S(k,t;q),
+ \quad S(k,t;q)=\sum_r^*e((kr+t\bar r)/q),\quad t=(n-j)h.
+\]
+If \(q\mid n-j\) and \(k=0\), the inner sum is \(\varphi(q)\). Even for unit \(t\), the Weil bound leaves an absolute Fourier sum of the weights. A Kuznetsov or Deshouillers--Iwaniec estimate \cite{DI} would require its smooth weights and common variables to persist after the decomposition. The available six-frequency resonance by itself supplies only one linear relation.
+
+Keeping the logarithms of Vaughan's identity gives sixth moment \(O(X^{11/2}L^9)\) for the two Type I terms with product parameter \(D\le X^{3/10}/L^3\). In the separate multi-modulus explicit formula a pole or a zero is taken in each leg. For the all-nontrivial-zero component only, let \(Z_{\ge k}\) denote contributions with at least \(k\) cross-side matches of the triple \((q,\chi,\gamma)\), counted injectively as multisets. Using the smoothed prefix and the original Dirichlet denominators \(q\le\sqrt X/L\), supplementary derivations 08--10 give
+\[
+\begin{array}{c|ccccc}
+k&6&5&4&3&2\\ \hline
+\text{upper bound for }|Z_{\ge k}|&
+X^{9/2+\epsilon}&X^{19/4+\epsilon}&X^{5+\epsilon}&X^{21/4+\epsilon}&X^{11/2}L^{11}
+\end{array}
+\]
+up to constants depending on the weights and \(\epsilon\). The first four exponents use the joint second moment of the characteristic phases. The last estimate sums the free positions into functions before applying Cauchy--Schwarz to the common modulus. If the modulus multisets coincide, the \(X^{21/4+\epsilon}\) estimate also covers one match. With general moduli, the zero-match, remaining single-match and mixed pole terms survive. On shifting the contour, the logarithmic derivative has residue minus the multiplicity at each nontrivial zero. GRH locates these residues but does not bound their joint signed contribution. Passing to the denominator-one representation removes the pole at the cost proved below; it changes the definition of a matching label.
+
+\paragraph{Arithmetic geometry and the common shift.}
+For distinct odd primes \(p_i\asymp\sqrt X\), define \(K_i(n)=p_i^{-1/2}S(k_i,(n-j_i)h_i;p_i)\) with \(k_i h_i\) a unit. For \(M=\prod_i p_i\), \(M_i=M/p_i\), choose \(J\equiv j_i,\ A\equiv M_i^2 k_i h_i\bmod p_i\). The normalized transform of the product on the common shift \(n\) is \(M^{-1/2}\ind_{(r,M)=1}e((A\bar r-Jr)/M)\). Shift by multiples of \(p_1\) to eliminate the first modulus in the correlation. Locally the Fourier transform of a shifted product is a rational-function sum with phase \(sr+a/r-a/(r-u)\). For \(u\ne0\) its two distinct simple poles give \(O(p^{-1/2})\) after normalization by \(p\), by the finite-field Weil bound. The zero-frequency terms are computed separately. Completing the three remaining factors as in supplementary derivation 12 yields for a fixed smooth window the squared bound \(O(Xp_1+X\sqrt{p_2p_3p_4})\), hence \(O(X^{7/8})\) before squaring. For a sharp interval the bound gains a factor \(L^{1/2}\) in cost. The arithmetic exponent-pair method gives a wider setting for this operation \cite{WX}. An application of an étale-cohomology weight bound to the full problem would require a trace-function realization of the actual weights, control of conductors, geometrically trivial components and the sum over moduli. The shared shift above gives a setting where these issues can be checked locally.
+
+\paragraph{Higher uniformity and dynamics.}
+A binary reflected convolution poses a different test from the averaged systems of linear forms in the primes \cite{GT}. For example let \(\chi\) be the quadratic character on \(\F_p\), \(p\) odd. At the reflection center, \(\sum_x\chi(x)\chi(-x)=\chi(-1)(p-1)\). Yet for fixed \(d=3,4\) the normalized \(U^d\) norm tends to zero: expand the cube average, discard \(O_d(p^{d-1})\) degenerate shift tuples, then apply the Weil bound to the squarefree product of distinct linear factors. A fixed shift of \(\chi\) translates the location of the exceptional output. This model shows which uniform estimate would be needed beyond a Gowers-norm or recurrence statement. A finite-field reflection expansion of the actual coefficients isolates terms whose twelve centers have cyclic pairwise distances greater than \(H=\lfloor\sqrt X L^2\rfloor\); the one-sided estimate on this remainder is equivalent to the original target by absorption (derivation 12). These centers are finite-field variables, distinct from the ordinates in \(D_{\sep}\).
+
+\paragraph{Microlocal tests, statistical spectra and index theory.}
+After passing to a common dilation \(z\), the radial phase of the zero integral has the exact form \(T_*\log z-\kappa z\), where \(T_*\) is the signed sum of heights and \(\kappa\) is the additive harmonic. Its second derivative is \(-T_*/z^2\). A spacing argument in a height shell \([H,2H]\) supplies separated configurations with \(|T_*|\ll L^2/H\) (derivation 11). At zero harmonic this precludes inferring large radial curvature from separation. A steepest-descent deformation would also need analytic amplitudes and control of the sharp arc boundaries.
+
+There is an exact finite test for what a spectral average can detect. Take a prime \(32X<p<66X\), extend \(a_n=\ind_{2\mid n}W(n/X)^{1/6}C_y^\sharp(n)\) by zero to \(\F_p\) using its support, and let \(b_r=p^{-1}\sum_n a_ne(-nr/p)\), \(Z_j=\sum_r|b_r|^{2j}\). Then
+\[
+ F(u,v)=\sum_{x\bmod p}\left|\sum_r b_r e((xr+ur^2+vr^3)/p)\right|^6,\qquad
+ \E_{u,v}F=p(6Z_1^3-9Z_1Z_2+4Z_3)\ll B_X .
+\]
+Indeed the first three power sums force two triples to agree as multisets by Newton's identities in characteristic \(p>3\). Equal-variance, equal-discriminant pairs, including reflected triples, have total absolute contribution at most \(12pZ_1^3\) (derivation 12). The desired quantity is the particular value \(F(0,0)\). A limiting GUE spacing statistic or quantum equidistribution of a subsequence would likewise require an additional individual upper bound to exclude every exceptional integer.
+
+For \(A=\operatorname{diag}(|a_n|^2/(X^{11/6}L^4))\), its positive trace \(\operatorname{Tr}(A^3)=F(0,0)/B_X\) makes the same point. The summand of \(\log\det_3(I+A)\) at an eigenvalue \(t\ge0\) is \(\int_0^t v^2/(1+v)\,dv\), between \(t^3/(3(1+t))\) and \(t^3/3\). Uniform boundedness of the regularized determinant logarithm is therefore equivalent to the required bounded trace. The Fredholm index of \(I+A\) is zero for every such matrix, including ones with arbitrarily large trace. An index computation alone cannot provide that estimate. Similarly, a Kolmogorov-complexity argument would need a proved coding inequality for the actual exceptional integers. A least exception above a given bound, if one exists, can be found by a short exhaustive-search program supplied with that bound. The cost of checking many prime pairs does not imply a large description length. A local-lemma approach would require a probability space, a dependency graph and an argument reaching every prescribed output.
+
+\section{Formalization and the remaining estimate}
+The companion uses Lean 4.19.0 and mathlib at the revision recorded in the Lake manifest. \texttt{GoldbachSpectral.Product} builds the summable product on the complex slice representing a quaternion. It proves the factor-zero criterion, checks the slice against quaternionic multiplication and handles equality in the half-space criterion. \texttt{Obstruction} and \texttt{WeakS} formalize the implications of a norm spike and the weak-hypothesis model. The remaining spectral modules treat the Buchstab lemma, finite compressions, odd-character cancellation, covariance and the reflection calculation.
+
+The eleven later modules cover the finite algebra behind successive analytic reductions. For example \texttt{GoldbachSeparationSieve.incidence\_schur} checks the bounded row-and-column inequality used in Theorem \ref{t:cells}. In the same module \texttt{weighted\_witness\_count} sums a family of pointwise witnesses, and \texttt{lower\_balanced\_window} and \texttt{upper\_balanced\_window} check the endpoint geometry of Theorem \ref{t:main}. The reproducibility guide maps the other modules to their derivations. The audit traverses the dependencies of 287 theorem declarations in the project namespaces, including generated auxiliary declarations. The audit permits only \texttt{propext}, \texttt{Classical.choice} and \texttt{Quot.sound}. Inputs appearing in a theorem's type remain hypotheses. The continuous arc estimates, the explicit-formula bounds, the identification of the Hardy-space operator and the final long-cut estimate are outside the machine proof.
+
+The principal open arithmetic question has two useful scales. An \(o(X^6)\) one-sided bound for \(D_{\sep}\) at the three long prefixes of Theorem \ref{t:main} would suffice for balanced representations at every sufficiently large even integer. The stronger \(O(B_X)\) bound on the full mesh of Theorem \ref{t:short} would give quantitative decay of the balanced operator defect. Passing from the compression to Hypothesis S additionally requires an estimate on the full Hardy space. These implications specify what an improvement in either the zero correlations or the two-prime estimates would establish.
+
+\appendix
+\section{Uniformity in the sharp cutoff}\label{a:transfer}
+Here are details for the analytic estimates \eqref{eq:major}--\eqref{eq:transfer}. All implied constants may depend on the fixed smooth weights. The analytic input for the minor arcs is the GRH estimate for a prime exponential sum of Friedlander and Goldston \cite[eq.~(1.15)]{FG}.
+\paragraph{The minor-arc square sum.}
+Write \(\alpha=a/q+\beta\) by Dirichlet approximation with \(q\le D=\lfloor\sqrt X/L\rfloor\) and \(|\beta|\le 1/(qD)\). For the sharp or smooth leg let \(V_j(\beta)=\int w_j(t)e(\beta t)dt\), using \(w_j=\ind_{[0,y]}\) for the sharp integral. The error after subtracting \(\mu(q)V_j/\varphi(q)\) is
+\[
+ O\big(\sqrt{qX}\,L(L+\sqrt{X|\beta|})\big)=O(X^{3/4}L^{3/2}).
+\]
+Partial summation gives the smooth version; higher powers in \(\Lambda\) cost \(O(\sqrt X L^2)\). If \(q\le Q\) on the minor arcs then \(X|\beta|\ge L^4\), so \(V_g\) decays rapidly. If \(q>Q\), \(X/\varphi(q)\ll X^{3/4}\) for large \(X\). Hence \(\sup_{\mm}|P_g|\ll X^{3/4}L^{3/2}\). Multiplication by \(\|P_y\|_2^2\ll XL\) after squaring proves the first bound of \eqref{eq:major}.
+
+\paragraph{The major-arc square sum and sixth moment.}
+The arcs of half-width \(Z/X=L^4/X\) are disjoint as \(Q^2 Z=o(X)\). On the arc at \(a/q\) set \(D_j=P_j-\mu(q)V_j/\varphi(q)\). The GRH prime number theorem in characters and partial summation give \(O(\sqrt X L^2(1+X|\beta|))\) for each twisted residue discrepancy. Multiplicative Parseval on the unit classes, followed by additive Parseval on all classes and restriction to reduced numerators, gives
+\[
+ \sum_{a\bmod q}^* |D_j|^2\ll qX L^4(1+X|\beta|)^2 .
+\]
+Nonunit prime powers contribute \(O(L^2)\) per numerator. Split the product error on the major arcs into the two linear terms \(H_1=\mu(q)(V_y D_g+V_gD_y)/\varphi(q)\) and the quadratic term \(H_2=D_yD_g\). Since \(|V_j|\ll X/(1+X|\beta|)\), numerator Cauchy--Schwarz, integration in \(\beta\) and disjointness give
+\[
+ \|\widehat H_1\|_\infty\ll_\epsilon X^{1/2+\epsilon}Q,\quad
+ \sum_n|\widehat H_1(n)|^2\ll_\epsilon X^{2+\epsilon},\quad
+ \|\widehat H_2\|_\infty\ll_\epsilon X^\epsilon Q^2 .
+\]
+For clarity, the underlying denominator sums before absorbing logarithms are \(Z\sum_{q\le Q}q/\varphi(q)\), \(Z\sum_{q\le Q}q/\varphi(q)^2\) and \(Z^3\sum_{q\le Q}q\), respectively. In the model product the rapid decay of \(V_g\) permits integration over the whole real line. Its \(n\)-th coefficient contains the singular-series tail \(\sum_{q>Q}\mu^2(q)|c_q(n)|/\varphi(q)^2\ll_\epsilon X^\epsilon/Q\); here \(c_q(n)\) is the Ramanujan sum. Write \(q=dm\), \(d=(q,n)\), use \(|c_q(n)|=\varphi(d)\) for squarefree \(q\), sum \(1/\varphi(m)^2\) for \(m>Q/d\), then sum over \(d\mid n\). The model error is \(O_\epsilon(X^{1+\epsilon}/Q)\). Take the supremum to the fourth power times the second moment for \(H_1\), and the supremum to the sixth times \(O(X)\) outputs for the other two errors. The three exponents are \(26/5,23/5,26/5\), respectively, up to \(\epsilon\). This proves the second estimate in \eqref{eq:major}.
+
+\paragraph{The endpoint and pole.}
+Equation \eqref{eq:interval} at \(Y=X^{4/5}\) allows averaging sharp prefixes over intervals of length \(X^{4/5}\) by Minkowski, at cost \(O(B_X^{1/6})\). For \(y<X^{4/5}\) take negative prefixes to be empty. For denominator one the smooth explicit formula is \(P_w=V_w+Z_w+O(L)\), uniformly for \(|\alpha|\le1/2\). It follows by integrating \(-\zeta'/\zeta\) against the Mellin transform of \(w(t)e(\alpha t)\); the nontrivial residues give \(Z_w\). The trivial-zero contribution is absolutely bounded by integrating \(|w(t)|/[t(t^2-1)]\) since both weights vanish on a fixed neighborhood of \(t=1\). In particular \(\|Z_w\|_2\ll\sqrt{XL}\) and \(\sup_{\mm}|Z_g|\ll X^{3/4}L^{3/2}\). On \(\mm\) the smooth pole decays rapidly and \(|V_f|\ll|\alpha|^{-1}\) by bounded variation. Consequently \(U=\ind_\mm V_f P_g\) satisfies
+\[
+ \|\widehat U\|_\infty\ll X^{3/4}L^{5/2},\qquad
+ \|\widehat U\|_2^2\ll X^{5/2}/L .
+\]
+The lower limit \(|\alpha|\ge L^4/X\) is essential for the second estimate. Their product in the fourth-power-times-square bound is \(O(X^{11/2}L^9)\). Remaining \(O(L)\) errors in the product have sixth norm bounded by their second norm, \(O(\sqrt X L^{O(1)})\).
+
+\paragraph{The near-origin minor arcs.}
+On \(\mm\cap\{X|\alpha|\le T_0\}\), first take heights \(|\gamma|\le C T_0\), where \(C\) is large enough for both supports. Real Plancherel in \(t\) and the dual of the sampling inequality of Theorem \ref{t:cells} bound the squared norm of the low-zero sum by \(O(T_0 L^2(1+\ell_w))\), where \(\ell_w\) is the log-support length (\(O(L)\) for the prefix, \(O(1)\) for \(g\)). At higher zeros the smooth leg is nonstationary to all orders. For \(f\) one integration by parts with bounded variation gives \(O(\sqrt X/|\gamma|)\). Summed up to \(X^2\) this is \(O(\sqrt X L^2)\); the rest costs an arbitrarily small power by the cutoff in Section \ref{s:windows}. On the interval of length \(2T_0/X\) this proves local norms \(O(\sqrt{T_0}L^2)\) and \(O(\sqrt{T_0}L)\) for \(Z_f,Z_g\). Their product has Fourier coefficients bounded by \(O(T_0L^3)\) and square sum \(O(X^{3/2}T_0L^7)\), the latter using the minor-arc supremum for \(Z_g\). Its window sixth moment is \(O(X^{3/2}T_0^5L^{19})=O(X^{11/2}L^9)\). The triangle inequality proves the sharp-to-zero norm transfer in \eqref{eq:transfer}. Inclusion--exclusion in Section \ref{s:heights} proves the remaining assertion there.
+
+\section*{Availability and authorship}
+The accompanying archive includes the editable manuscript, the thirteen stages of the supporting derivations in Chinese, the Lean source, a pinned dependency manifest and verification records. The mathematical exposition and its supplements are licensed by Lei under \href{https://creativecommons.org/licenses/by/4.0/}{CC BY 4.0}. The original Lean companion is licensed under \href{https://opensource.org/license/mit}{MIT}. An AI assistant helped synthesize the derivations, edit the English text and run the formal checks. This version is a research preprint.
+
+\begin{thebibliography}{99}
+\bibitem{LL} J. Li and J. Liu, \emph{A Conditional Proof of the Goldbach Conjecture}, Shandong University manuscript, 13 November 2026. \href{https://mrc.sdu.edu.cn/english/info/1018/1514.htm}{Manuscript and abstract}.
+\bibitem{YL} Y. Liu, \emph{Failure of the Li--Liu spectral hypothesis R under Dirichlet GRH}, Hexagon preprint 2611.00788v1, 21 November 2026. \href{https://hexagonmath.org/2611.00788v1}{Version 1}.
+\bibitem{LP} A. Languasco and A. Perelli, \emph{A pair correlation hypothesis and the exceptional set in Goldbach's problem}, Mathematika (1996). \href{https://doi.org/10.1112/S0025579300011827}{DOI}.
+\bibitem{FG} J. B. Friedlander and D. A. Goldston, \emph{Sums of three or more primes}, Trans. Amer. Math. Soc. \textbf{349} (1997), 287--310. \href{https://doi.org/10.1090/S0002-9947-97-01652-8}{DOI}.
+\bibitem{MV} H. L. Montgomery and R. C. Vaughan, \emph{The large sieve}, Mathematika \textbf{20} (1973), 119--134. \href{https://doi.org/10.1112/S0025579300004708}{DOI}.
+\bibitem{Ch} K. Chandrasekharan, \emph{Lectures on the Riemann Zeta-Function}, Tata Institute of Fundamental Research, Bombay, 1953. \href{https://mathweb.tifr.res.in/Documents/Publications/Lectures/tifr01.pdf}{Lecture notes}.
+\bibitem{DI} J.-M. Deshouillers and H. Iwaniec, \emph{Kloosterman sums and Fourier coefficients of cusp forms}, Invent. Math. \textbf{70} (1982), 219--288. \href{https://doi.org/10.1007/BF01390728}{DOI}.
+\bibitem{WX} J. Wu and P. Xi, \emph{Arithmetic exponent pairs for algebraic trace functions and applications}. \href{https://arxiv.org/abs/1603.07060}{arXiv:1603.07060}.
+\bibitem{GT} B. Green and T. Tao, \emph{Linear equations in primes}, Ann. of Math. \textbf{171} (2010), 1753--1850. \href{https://annals.math.princeton.edu/2010/171-3/p08}{Journal article}.
+\end{thebibliography}
+\end{document}

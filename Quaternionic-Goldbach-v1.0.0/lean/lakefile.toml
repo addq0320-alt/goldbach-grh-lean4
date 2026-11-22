@@ -1,0 +1,49 @@
+name = "quaternionic_goldbach"
+version = "1.0.0"
+defaultTargets = ["GoldbachResearch"]
+
+[[require]]
+name = "mathlib"
+scope = "leanprover-community"
+git = "https://github.com/leanprover-community/mathlib4"
+rev = "v4.19.0"
+
+[[lean_lib]]
+name = "GoldbachDefect"
+
+[[lean_lib]]
+name = "GoldbachDuality"
+
+[[lean_lib]]
+name = "GoldbachFarey"
+
+[[lean_lib]]
+name = "GoldbachFiveModuli"
+
+[[lean_lib]]
+name = "GoldbachFreeLabels"
+
+[[lean_lib]]
+name = "GoldbachMellin"
+
+[[lean_lib]]
+name = "GoldbachMinorArcs"
+
+[[lean_lib]]
+name = "GoldbachSeparationSieve"
+
+[[lean_lib]]
+name = "GoldbachSpectral"
+
+[[lean_lib]]
+name = "GoldbachThreeRoutes"
+
+[[lean_lib]]
+name = "GoldbachWindows"
+
+[[lean_lib]]
+name = "GoldbachZeroCorrelations"
+
+[[lean_lib]]
+name = "GoldbachResearch"
+
